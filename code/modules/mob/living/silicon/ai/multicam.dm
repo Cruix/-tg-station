@@ -135,6 +135,7 @@ GLOBAL_DATUM(ai_camera_room_landmark, /obj/effect/landmark/ai_multicam_room)
 		screen.ai.camera_visibility(src)
 	else
 		GLOB.cameranet.visibility(src)
+	update_flashing_lights()
 
 //AI procs
 
