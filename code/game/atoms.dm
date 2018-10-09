@@ -32,6 +32,13 @@
 
 	var/list/filter_data //For handling persistent filters
 
+	var/custom_price
+
+	var/datum/component/orbiter/orbiters
+
+	var/rad_flags = NONE // Will move to flags_1 when i can be arsed to
+	var/rad_insulation = RAD_NO_INSULATION
+
 /atom/New(loc, ...)
 	//atom creation method that preloads variables at creation
 	if(GLOB.use_preloader && (src.type == GLOB._preloader.target_path))//in case the instanciated atom is creating other atoms in New()
@@ -74,6 +81,9 @@
 		var/turf/T = loc
 		T.has_opaque_atom = TRUE // No need to recalculate it in this case, it's guaranteed to be on afterwards anyways.
 
+	if (canSmoothWith)
+		canSmoothWith = typelist("canSmoothWith", canSmoothWith)
+
 	ComponentInitialize()
 
 	return INITIALIZE_HINT_NORMAL
@@ -94,6 +104,8 @@
 
 	if(reagents)
 		qdel(reagents)
+
+	orbiters = null // The component is attached to us normaly and will be deleted elsewhere
 
 	LAZYCLEARLIST(overlays)
 	LAZYCLEARLIST(priority_overlays)
@@ -283,7 +295,7 @@
 	return
 
 /atom/proc/contents_explosion(severity, target)
-	return
+	return TRUE //Return TRUE if the contents_explosion has not been overridden.
 
 /atom/proc/ex_act(severity, target)
 	set waitfor = FALSE
@@ -298,7 +310,7 @@
 	SEND_SIGNAL(src, COMSIG_ATOM_FIRE_ACT, exposed_temperature, exposed_volume)
 	return
 
-/atom/proc/hitby(atom/movable/AM, skipcatch, hitpush, blocked)
+/atom/proc/hitby(atom/movable/AM, skipcatch, hitpush, blocked, datum/thrownthing/throwingdatum)
 	if(density && !has_gravity(AM)) //thrown stuff bounces off dense stuff in no grav, unless the thrown stuff ends up inside what it hit(embedding, bola, etc...).
 		addtimer(CALLBACK(src, .proc/hitby_react, AM), 2)
 
@@ -566,6 +578,14 @@
 /atom/proc/multitool_act(mob/living/user, obj/item/I)
 	return
 
+/atom/proc/multitool_check_buffer(user, obj/item/I, silent = FALSE)
+	if(!istype(I, /obj/item/multitool))
+		if(user && !silent)
+			to_chat(user, "<span class='warning'>[I] has no data buffer!</span>")
+		return FALSE
+	return TRUE
+
+
 /atom/proc/screwdriver_act(mob/living/user, obj/item/I)
 	SEND_SIGNAL(src, COMSIG_ATOM_SCREWDRIVER_ACT, user, I)
 
@@ -582,6 +602,9 @@
 	return
 
 /atom/proc/GenerateTag()
+	return
+
+/atom/proc/connect_to_shuttle(obj/docking_port/mobile/port, obj/docking_port/stationary/dock, idnum, override=FALSE)
 	return
 
 // Generic logging helper
@@ -621,6 +644,8 @@
 			log_game(log_text)
 		if(LOG_GAME)
 			log_game(log_text)
+		if(LOG_MECHA)
+			log_mecha(log_text)
 		else
 			stack_trace("Invalid individual logging type: [message_type]. Defaulting to [LOG_GAME] (LOG_GAME).")
 			log_game(log_text)

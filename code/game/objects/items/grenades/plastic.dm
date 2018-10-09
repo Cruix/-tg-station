@@ -46,7 +46,7 @@
 		playsound(src, 'sound/weapons/tap.ogg', 20, 1)
 		update_icon()
 		return
-	if(nadeassembly && istype(I, /obj/item/wirecutters))
+	if(nadeassembly && I.tool_behaviour == TOOL_WIRECUTTER)
 		I.play_tool_sound(src, 20)
 		nadeassembly.forceMove(get_turf(src))
 		nadeassembly.master = null
@@ -142,7 +142,7 @@
 		else if(UM.has_antag_datum(/datum/antagonist/changeling))
 			message_say = "FOR THE HIVE!"
 		else if(UM.has_antag_datum(/datum/antagonist/cult))
-			message_say = "FOR NAR-SIE!"
+			message_say = "FOR NAR'SIE!"
 		else if(UM.has_antag_datum(/datum/antagonist/clockcult))
 			message_say = "FOR RATVAR!"
 		else if(UM.has_antag_datum(/datum/antagonist/rev))
@@ -196,7 +196,7 @@
 	user.gib(1, 1)
 
 /obj/item/grenade/plastic/c4/attackby(obj/item/I, mob/user, params)
-	if(istype(I, /obj/item/screwdriver))
+	if(I.tool_behaviour == TOOL_SCREWDRIVER)
 		open_panel = !open_panel
 		to_chat(user, "<span class='notice'>You [open_panel ? "open" : "close"] the wire panel.</span>")
 	else if(is_wire_tool(I))

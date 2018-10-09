@@ -338,13 +338,13 @@ or shoot a gun to move around via Newton's 3rd Law of Motion."
 			angle = 0
 			cut_overlays()
 			icon_state = "runed_sense0"
-			desc = "Nar-Sie demands that [sac_objective.target] be sacrificed before the summoning ritual can begin."
+			desc = "Nar'Sie demands that [sac_objective.target] be sacrificed before the summoning ritual can begin."
 			add_overlay(sac_objective.sac_image)
 		else
 			var/datum/objective/eldergod/summon_objective = locate() in antag.cult_team.objectives
 			if(!summon_objective)
 				return
-			desc = "The sacrifice is complete, summon Nar-Sie! The summoning can only take place in [english_list(summon_objective.summon_spots)]!"
+			desc = "The sacrifice is complete, summon Nar'Sie! The summoning can only take place in [english_list(summon_objective.summon_spots)]!"
 			if(icon_state == "runed_sense1")
 				return
 			animate(src, transform = null, time = 1, loop = 0)
@@ -422,9 +422,9 @@ or shoot a gun to move around via Newton's 3rd Law of Motion."
 		if(C && C.clock_team)
 			textlist += "[C.clock_team.eminence ? "There is an Eminence." : "<b>There is no Eminence! Get one ASAP!</b>"]<br>"
 		textlist += "There are currently <b>[servants]</b> servant[servants > 1 ? "s" : ""] of Ratvar.<br>"
-		for(var/i in SSticker.scripture_states)
+		for(var/i in GLOB.scripture_states)
 			if(i != SCRIPTURE_DRIVER) //ignore the always-unlocked stuff
-				textlist += "[i] Scripture: <b>[SSticker.scripture_states[i] ? "UNLOCKED":"LOCKED"]</b><br>"
+				textlist += "[i] Scripture: <b>[GLOB.scripture_states[i] ? "UNLOCKED":"LOCKED"]</b><br>"
 		var/obj/structure/destructible/clockwork/massive/celestial_gateway/G = GLOB.ark_of_the_clockwork_justiciar
 		if(G)
 			var/time_info = G.get_arrival_time(FALSE)

@@ -150,11 +150,11 @@
 		H.set_cloned_appearance()
 		if(!name)
 			if(has_owner)
-				H.real_name = "[initial(X.prefix)] Golem ([rand(1,999)])"
+				H.fully_replace_character_name(null, "[initial(X.prefix)] Golem ([rand(1,999)])")
 			else
-				H.real_name = H.dna.species.random_name()
+				H.fully_replace_character_name(null, H.dna.species.random_name())
 		else
-			H.real_name = name
+			H.fully_replace_character_name(null, name)
 	if(has_owner)
 		new_spawn.mind.assigned_role = "Servant Golem"
 	else
@@ -327,7 +327,7 @@
 	objectives = "Do not leave your assigned hotel. Try and keep the peace between staff and guests, non-lethal force heavily advised if possible."
 
 /datum/outfit/hotelstaff/security
-	name = "Hotel Secuirty"
+	name = "Hotel Security"
 	uniform = /obj/item/clothing/under/rank/security/blueshirt
 	shoes = /obj/item/clothing/shoes/jackboots
 	suit = /obj/item/clothing/suit/armor/vest/blueshirt

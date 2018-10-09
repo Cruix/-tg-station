@@ -90,7 +90,6 @@
 		move_delay = old_move_delay
 	else
 		move_delay = world.time
-	var/oldloc = mob.loc
 
 	if(L.confused)
 		var/newdir = 0
@@ -108,14 +107,10 @@
 
 	if((direct & (direct - 1)) && mob.loc == n) //moved diagonally successfully
 		add_delay *= 2
-	if(mob.loc != oldloc)
-		move_delay += add_delay
+	move_delay += add_delay
 	if(.) // If mob is null here, we deserve the runtime
 		if(mob.throwing)
 			mob.throwing.finalize(FALSE)
-
-	for(var/obj/O in mob.user_movement_hooks)
-		O.intercept_user_move(direct, mob, n, oldloc)
 
 	var/atom/movable/P = mob.pulling
 	if(P && !ismob(P) && P.density)
@@ -148,7 +143,7 @@
 		if(INCORPOREAL_MOVE_BASIC)
 			var/T = get_step(L,direct)
 			if(T)
-				L.loc = T
+				L.forceMove(T)
 			L.setDir(direct)
 		if(INCORPOREAL_MOVE_SHADOW)
 			if(prob(50))
@@ -190,7 +185,7 @@
 				new /obj/effect/temp_visual/dir_setting/ninja/shadow(mobloc, L.dir)
 				var/T = get_step(L,direct)
 				if(T)
-					L.loc = T
+					L.forceMove(T)
 			L.setDir(direct)
 		if(INCORPOREAL_MOVE_JAUNT) //Incorporeal move, but blocked by holy-watered tiles and salt piles.
 			var/turf/open/floor/stepTurf = get_step(L, direct)
@@ -209,7 +204,7 @@
 					to_chat(L, "<span class='warning'>Holy energies block your path!</span>")
 					return
 
-				L.loc = get_step(L, direct)
+				L.forceMove(stepTurf)
 			L.setDir(direct)
 	return TRUE
 

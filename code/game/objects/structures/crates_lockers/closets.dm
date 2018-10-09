@@ -74,7 +74,7 @@
 		else
 			add_overlay("[icon_state]_open")
 
-/obj/structure/closet/examine(mob/living/user)
+/obj/structure/closet/examine(mob/user)
 	..()
 	if(welded)
 		to_chat(user, "<span class='notice'>It's welded shut.</span>")
@@ -84,8 +84,10 @@
 		to_chat(user, "<span class='notice'>The parts are <b>welded</b> together.</span>")
 	else if(secure && !opened)
 		to_chat(user, "<span class='notice'>Alt-click to [locked ? "unlock" : "lock"].</span>")
-	if(user.has_trait(TRAIT_SKITTISH))
-		to_chat(user, "<span class='notice'>Ctrl-Shift-click [src] to jump inside.</span>")
+	if(isliving(user))
+		var/mob/living/L = user
+		if(L.has_trait(TRAIT_SKITTISH))
+			to_chat(user, "<span class='notice'>Ctrl-Shift-click [src] to jump inside.</span>")
 
 /obj/structure/closet/CanPass(atom/movable/mover, turf/target)
 	if(wall_mounted)
@@ -221,7 +223,7 @@
 	. = TRUE
 	if(opened)
 		if(istype(W, cutting_tool))
-			if(istype(W, /obj/item/weldingtool))
+			if(W.tool_behaviour == TOOL_WELDER)
 				if(!W.tool_start_check(user, amount=0))
 					return
 
@@ -241,7 +243,7 @@
 				return
 		if(user.transferItemToLoc(W, drop_location())) // so we put in unlit welder too
 			return
-	else if(istype(W, /obj/item/weldingtool) && can_weld_shut)
+	else if(W.tool_behaviour == TOOL_WELDER && can_weld_shut)
 		if(!W.tool_start_check(user, amount=0))
 			return
 
@@ -255,7 +257,7 @@
 							"<span class='notice'>You [welded ? "weld" : "unwelded"] \the [src] with \the [W].</span>",
 							"<span class='italics'>You hear welding.</span>")
 			update_icon()
-	else if(istype(W, /obj/item/wrench) && anchorable)
+	else if(W.tool_behaviour == TOOL_WRENCH && anchorable)
 		if(isinspace() && !anchored)
 			return
 		setAnchored(!anchored)

@@ -1509,8 +1509,6 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 
 	character.backbag = backbag
 
-	character.dna.features = features.Copy()
-	character.dna.real_name = character.real_name
 	var/datum/species/chosen_species
 	if(!roundstart_checks || (pref_species.id in GLOB.roundstart_races))
 		chosen_species = pref_species.type
@@ -1518,7 +1516,13 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 		chosen_species = /datum/species/human
 		pref_species = new /datum/species/human
 		save_character()
+
 	character.set_species(chosen_species, icon_update = FALSE, pref_load = TRUE)
+	character.dna.features = features.Copy()
+	character.dna.real_name = character.real_name
+
+	if("tail_lizard" in pref_species.default_features)
+		character.dna.species.mutant_bodyparts |= "tail_lizard"
 
 	if(icon_updates)
 		character.update_body()
@@ -1537,6 +1541,10 @@ GLOBAL_LIST_EMPTY(preferences_datums)
 			return pick(GLOB.clown_names)
 		if("mime")
 			return pick(GLOB.mime_names)
+		if("religion")
+			return DEFAULT_RELIGION
+		if("deity")
+			return DEFAULT_DEITY
 	return random_unique_name()
 
 /datum/preferences/proc/ask_for_custom_name(mob/user,name_id)

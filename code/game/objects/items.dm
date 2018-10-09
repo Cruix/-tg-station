@@ -108,8 +108,12 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/list/juice_results //A reagent list containing blah blah... but when JUICED in a grinder!
 
 /obj/item/Initialize()
-	if (!materials)
-		materials = list()
+
+	materials =	typelist("materials", materials)
+
+	if (attack_verb)
+		attack_verb = typelist("attack_verb", attack_verb)
+
 	. = ..()
 	for(var/path in actions_types)
 		new path(src)
@@ -198,7 +202,9 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 	var/list/boostable_nodes = techweb_item_boost_check(src)
 	if (boostable_nodes)
 		for(var/id in boostable_nodes)
-			var/datum/techweb_node/node = SSresearch.techweb_nodes[id]
+			var/datum/techweb_node/node = SSresearch.techweb_node_by_id(id)
+			if(!node)
+				continue
 			research_msg += sep
 			research_msg += node.display_name
 			sep = ", "
@@ -519,10 +525,10 @@ GLOBAL_VAR_INIT(rpg_loot_items, FALSE)
 			itempush = 0 //too light to push anything
 		return A.hitby(src, 0, itempush)
 
-/obj/item/throw_at(atom/target, range, speed, mob/thrower, spin=1, diagonals_first = 0, datum/callback/callback)
+/obj/item/throw_at(atom/target, range, speed, mob/thrower, spin=1, diagonals_first = 0, datum/callback/callback, force)
 	thrownby = thrower
 	callback = CALLBACK(src, .proc/after_throw, callback) //replace their callback with our own
-	. = ..(target, range, speed, thrower, spin, diagonals_first, callback)
+	. = ..(target, range, speed, thrower, spin, diagonals_first, callback, force)
 
 
 /obj/item/proc/after_throw(datum/callback/callback)

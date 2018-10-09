@@ -8,9 +8,9 @@
 	display_name = "Basic Research Technology"
 	description = "NT default research technologies."
 	// Default research tech, prevents bricking
-	design_ids = list("basic_matter_bin", "basic_cell", "basic_scanning", "basic_capacitor", "basic_micro_laser", "micro_mani",
-	"destructive_analyzer", "circuit_imprinter", "experimentor", "rdconsole", "design_disk", "tech_disk", "rdserver", "rdservercontrol", "mechfab",
-	"space_heater", "xlarge_beaker", "sec_rshot", "sec_bshot", "sec_slug", "sec_Islug", "sec_dart", "sec_38",
+	design_ids = list("basic_matter_bin", "basic_cell", "basic_scanning", "basic_capacitor", "basic_micro_laser", "micro_mani", "desttagger", "handlabel", "packagewrap",
+	"destructive_analyzer", "circuit_imprinter", "experimentor", "rdconsole", "design_disk", "tech_disk", "rdserver", "rdservercontrol", "mechfab", "paystand",
+	"space_heater", "beaker", "large_beaker", "bucket", "xlarge_beaker", "sec_rshot", "sec_bshot", "sec_slug", "sec_Islug", "sec_dart", "sec_38",
 	"rglass","plasteel","plastitanium","plasmaglass","plasmareinforcedglass","titaniumglass","plastitaniumglass")
 
 /datum/techweb_node/mmi
@@ -49,7 +49,7 @@
 	display_name = "Biological Technology"
 	description = "What makes us tick."	//the MC, silly!
 	prereq_ids = list("base")
-	design_ids = list("chem_heater", "chem_master", "chem_dispenser", "sleeper", "vr_sleeper", "pandemic", "defibmount", "operating", "soda_dispenser", "beer_dispenser", "healthanalyzer")
+	design_ids = list("chem_heater", "chem_master", "chem_dispenser", "sleeper", "vr_sleeper", "pandemic", "defibrillator", "defibmount", "operating", "soda_dispenser", "beer_dispenser", "healthanalyzer", "medspray")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 	export_price = 5000
 
@@ -58,7 +58,7 @@
 	display_name = "Advanced Biotechnology"
 	description = "Advanced Biotechnology"
 	prereq_ids = list("biotech")
-	design_ids = list("piercesyringe", "crewpinpointer", "smoke_machine", "plasmarefiller", "limbgrower", "defibrillator", "meta_beaker", "healthanalyzer_advanced","harvester","holobarrier_med")
+	design_ids = list("piercesyringe", "crewpinpointer", "smoke_machine", "plasmarefiller", "limbgrower", "meta_beaker", "healthanalyzer_advanced", "harvester", "holobarrier_med", "detective_scanner", "defibrillator_compact")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 	export_price = 5000
 
@@ -77,7 +77,7 @@
 	display_name = "Advanced Surgery"
 	description = "When simple medicine doesn't cut it."
 	prereq_ids = list("adv_biotech")
-	design_ids = list("surgery_lobotomy", "surgery_reconstruction")
+	design_ids = list("surgery_lobotomy", "surgery_reconstruction", "surgery_exp_dissection")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 	export_price = 5000
 
@@ -123,7 +123,7 @@
 	display_name = "Industrial Engineering"
 	description = "A refresher course on modern engineering technology."
 	prereq_ids = list("base")
-	design_ids = list("solarcontrol", "recharger", "powermonitor", "rped", "pacman", "adv_capacitor", "adv_scanning", "emitter", "high_cell", "adv_matter_bin",
+	design_ids = list("solarcontrol", "recharger", "powermonitor", "rped", "pacman", "adv_capacitor", "adv_scanning", "emitter", "high_cell", "adv_matter_bin", "scanner_gate",
 	"atmosalerts", "atmos_control", "recycler", "autolathe", "high_micro_laser", "nano_mani", "mesons", "thermomachine", "rad_collector", "tesla_coil", "grounding_rod",
 	"apc_control", "cell_charger", "power control", "airlock_board", "firelock_board", "airalarm_electronics", "firealarm_electronics", "cell_charger", "stack_console", "stack_machine")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 7500)
@@ -171,18 +171,26 @@
 	display_name = "Basic Bluespace Theory"
 	description = "Basic studies into the mysterious alternate dimension known as bluespace."
 	prereq_ids = list("base")
-	design_ids = list("beacon", "xenobioconsole", "telesci_gps")
+	design_ids = list("beacon", "xenobioconsole", "telesci_gps", "bluespace_crystal")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 	export_price = 5000
 
-/datum/techweb_node/adv_bluespace
-	id = "adv_bluespace"
-	display_name = "Advanced Bluespace Research"
-	description = "Deeper understanding of how the Bluespace dimension works"
-	prereq_ids = list("practical_bluespace", "high_efficiency")
-	design_ids = list("bluespace_matter_bin", "femto_mani", "triphasic_scanning", "tele_station", "tele_hub", "quantumpad", "launchpad", "launchpad_console",
-	"teleconsole", "bag_holding", "bluespace_crystal", "wormholeprojector", "bluespace_pod")
-	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 15000)
+/datum/techweb_node/bluespace_travel
+	id = "bluespace_travel"
+	display_name = "Bluespace Travel"
+	description = "Application of Bluespace for static teleportation technology."
+	prereq_ids = list("practical_bluespace")
+	design_ids = list("tele_station", "tele_hub", "teleconsole", "quantumpad", "launchpad", "launchpad_console", "bluespace_pod")
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 5000)
+	export_price = 5000
+
+/datum/techweb_node/micro_bluespace
+	id = "micro_bluespace"
+	display_name = "Miniaturized Bluespace Research"
+	description = "Extreme reduction in space required for bluespace engines, leading to portable bluespace technology."
+	prereq_ids = list("bluespace_travel", "practical_bluespace", "high_efficiency")
+	design_ids = list("bluespace_matter_bin", "femto_mani", "triphasic_scanning", "bag_holding", "quantum_keycard", "wormholeprojector")
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 10000)
 	export_price = 5000
 
 /datum/techweb_node/practical_bluespace
@@ -198,7 +206,7 @@
 	id = "bluespace_power"
 	display_name = "Bluespace Power Technology"
 	description = "Even more powerful.. power!"
-	prereq_ids = list("adv_power", "adv_bluespace")
+	prereq_ids = list("adv_power", "practical_bluespace")
 	design_ids = list("bluespace_cell", "quadratic_capacitor")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 	export_price = 5000
@@ -468,6 +476,16 @@
 	export_price = 5000
 
 ////////////////////////Tools////////////////////////
+
+/datum/techweb_node/basic_tools
+	id = "basic_tools"
+	display_name = "Basic Tools"
+	description = "Basic mechanical, electronic, surgical and botanical tools."
+	prereq_ids = list("base")
+	design_ids = list("screwdriver", "wrench", "wirecutters", "crowbar", "multitool", "welding_tool", "tscanner", "analyzer", "cable_coil", "pipe_painter", "airlock_painter", "scalpel", "circular_saw", "surgicaldrill", "retractor", "cautery", "hemostat", "cultivator", "plant_analyzer", "shovel", "spade", "hatchet")
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 1500)
+	export_price = 5000
+
 /datum/techweb_node/basic_mining
 	id = "basic_mining"
 	display_name = "Mining Technology"
@@ -491,7 +509,7 @@
 	display_name = "Advanced Sanitation Technology"
 	description = "Clean things better, faster, stronger, and harder!"
 	prereq_ids = list("adv_engi")
-	design_ids = list("advmop", "buffer", "blutrash", "light_replacer")
+	design_ids = list("advmop", "buffer", "blutrash", "light_replacer", "spraybottle", "beartrap")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 	export_price = 5000
 
@@ -511,6 +529,15 @@
 	design_ids = list("exwelder", "jawsoflife", "handdrill")
 	prereq_ids = list("adv_engi")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
+	export_price = 5000
+
+/datum/techweb_node/sec_basic
+	id = "sec_basic"
+	display_name = "Basic Security Equipment"
+	description = "Standard equipment used by security."
+	design_ids = list("seclite", "pepperspray", "bola_energy", "zipties", "evidencebag")
+	prereq_ids = list("base")
+	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 1000)
 	export_price = 5000
 
 /////////////////////////weaponry tech/////////////////////////
@@ -608,7 +635,7 @@
 	id = "gravity_gun"
 	display_name = "One-point Bluespace-gravitational Manipulator"
 	description = "Fancy wording for gravity gun."
-	prereq_ids = list("adv_weaponry", "adv_bluespace")
+	prereq_ids = list("adv_weaponry", "bluespace_travel")
 	design_ids = list("gravitygun", "mech_gravcatapult")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 	export_price = 5000
@@ -657,7 +684,7 @@
 	id = "mecha_phazon"
 	display_name = "EXOSUIT: Phazon"
 	description = "Phazon exosuit designs"
-	prereq_ids = list("adv_mecha", "weaponry" , "adv_bluespace")
+	prereq_ids = list("adv_mecha", "weaponry" , "micro_bluespace")
 	design_ids = list("phazon_chassis", "phazon_torso", "phazon_head", "phazon_left_arm", "phazon_right_arm", "phazon_left_leg", "phazon_right_leg", "phazon_main",
 	"phazon_peri", "phazon_targ", "phazon_armor")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
@@ -775,7 +802,7 @@
 	id = "mech_teleporter"
 	display_name = "Exosuit Module (Teleporter Module)"
 	description = "An advanced piece of mech Equipment"
-	prereq_ids = list("adv_bluespace")
+	prereq_ids = list("micro_bluespace")
 	design_ids = list("mech_teleporter")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 	export_price = 5000
@@ -784,7 +811,7 @@
 	id = "mech_wormhole_gen"
 	display_name = "Exosuit Module (Localized Wormhole Generator)"
 	description = "An advanced piece of mech weaponry"
-	prereq_ids = list("adv_bluespace")
+	prereq_ids = list("bluespace_travel")
 	design_ids = list("mech_wormhole_gen")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 2500)
 	export_price = 5000
@@ -945,7 +972,7 @@
 	display_name = "Illegal Technology"
 	description = "Dangerous research used to create dangerous objects."
 	prereq_ids = list("adv_engi", "adv_weaponry", "explosive_weapons")
-	design_ids = list("decloner", "borg_syndicate_module", "suppressor", "largecrossbow", "donksofttoyvendor")
+	design_ids = list("decloner", "borg_syndicate_module", "ai_cam_upgrade", "suppressor", "largecrossbow", "donksofttoyvendor", "donksoft_refill")
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = 10000)
 	export_price = 5000
 	hidden = TRUE
