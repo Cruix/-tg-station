@@ -100,17 +100,30 @@ GLOBAL_LIST_INIT(meteorsC, list(/obj/effect/meteor/dust)) //for space dust event
 	var/timerid = null
 	var/list/meteordrop = list(/obj/item/stack/ore/iron)
 	var/dropamt = 2
+	var/ram_radius = 0
+	var/spins = TRUE
+	var/medal_worthy = TRUE
 
 /obj/effect/meteor/Move()
 	if(z != z_original || loc == dest)
 		qdel(src)
 		return FALSE
-
+	var/turf/startTurf = get_turf(src)
 	. = ..() //process movement...
 
 	if(.)//.. if did move, ram the turf we get in
-		var/turf/T = get_turf(loc)
+		var/turf/T = get_turf(src)
 		ram_turf(T)
+		var/dir_moved = get_dir(startTurf, T)
+		setDir(dir_moved)
+		if((dir_moved != 0) && (ram_radius > 0))
+			var/turf/turf_left = T
+			var/turf/turf_right = T
+			for(var/i = 1 to ram_radius)
+				turf_left = get_step(turf_left, turn(dir_moved, -90))
+				turf_right = get_step(turf_right, turn(dir_moved, -90))
+				ram_turf(turf_left, 1 / i)
+				ram_turf(turf_right, 1 / i)
 
 		if(prob(10) && !isspaceturf(T))//randomly takes a 'hit' from ramming
 			get_hit()
@@ -128,7 +141,8 @@ GLOBAL_LIST_INIT(meteorsC, list(/obj/effect/meteor/dust)) //for space dust event
 	z_original = z
 	GLOB.meteor_list += src
 	SSaugury.register_doom(src, threat)
-	SpinAnimation()
+	if(spins)
+		SpinAnimation()
 	timerid = QDEL_IN(src, lifetime)
 	chase_target(target)
 
@@ -138,13 +152,13 @@ GLOBAL_LIST_INIT(meteorsC, list(/obj/effect/meteor/dust)) //for space dust event
 		playsound(src.loc, meteorsound, 40, 1)
 		get_hit()
 
-/obj/effect/meteor/proc/ram_turf(turf/T)
+/obj/effect/meteor/proc/ram_turf(turf/T, dist_from_center = 0)
 	//first bust whatever is in the turf
 	for(var/atom/A in T)
 		if(A != src)
 			if(isliving(A))
 				A.visible_message("<span class='warning'>[src] slams into [A].</span>", "<span class='userdanger'>[src] slams into you!.</span>")
-			A.ex_act(hitpwr)
+			A.ex_act(min(3, hitpwr + dist_from_center))
 
 	//then, ram the turf if it still exists
 	if(T)
@@ -165,7 +179,7 @@ GLOBAL_LIST_INIT(meteorsC, list(/obj/effect/meteor/dust)) //for space dust event
 	return
 
 /obj/effect/meteor/examine(mob/user)
-	if(!(flags_1 & ADMIN_SPAWNED_1) && isliving(user))
+	if(medal_worthy && !(flags_1 & ADMIN_SPAWNED_1) && isliving(user))
 		SSmedals.UnlockMedal(MEDAL_METEOR, user.client)
 	..()
 
