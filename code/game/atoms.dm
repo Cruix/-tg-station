@@ -208,10 +208,10 @@
 /atom/proc/is_open_container()
 	return is_refillable() && is_drainable()
 
-/atom/proc/is_injectable(allowmobs = TRUE)
+/atom/proc/is_injectable(mob/user, allowmobs = TRUE)
 	return reagents && (container_type & (INJECTABLE | REFILLABLE))
 
-/atom/proc/is_drawable(allowmobs = TRUE)
+/atom/proc/is_drawable(mob/user, allowmobs = TRUE)
 	return reagents && (container_type & (DRAWABLE | DRAINABLE))
 
 /atom/proc/is_refillable()
@@ -294,8 +294,11 @@
 		to_chat(user, "<span class='warning'>You can't move while buckled to [src]!</span>")
 	return
 
+/atom/proc/prevent_content_explosion()
+	return FALSE
+
 /atom/proc/contents_explosion(severity, target)
-	return TRUE //Return TRUE if the contents_explosion has not been overridden.
+	return //For handling the effects of explosions on contents that would not normally be effected
 
 /atom/proc/ex_act(severity, target)
 	set waitfor = FALSE
@@ -318,7 +321,7 @@
 	if(AM && isturf(AM.loc))
 		step(AM, turn(AM.dir, 180))
 
-/atom/proc/handle_slip(mob/living/carbon/C, knockdown_amount, obj/O, lube)
+/atom/proc/handle_slip(mob/living/carbon/C, knockdown_amount, obj/O, lube, paralyze, force_drop)
 	return
 
 //returns the mob's dna info as a list, to be inserted in an object's blood_DNA list
